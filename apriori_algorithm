@@ -1,0 +1,33 @@
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Your dataset
+data = {
+    'Applicant_ID': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    'Age': [28, 35, 22, 40, 32, 25, 38, 29, 33, 27],
+    'Education_Level': ["Bachelor's", "Master's", "Associate's", "PhD", "Master's", "Bachelor's", "Master's", "Associate's", "Bachelor's", "Master's"],
+    'Years_of_Experience': [4, 8, 1, 12, 6, 3, 10, 5, 7, 4],
+    'Technical_Skills': ['High', 'Very High', 'Low', 'Very High', 'Moderate', 'Moderate', 'High', 'Moderate', 'High', 'Low'],
+    'Communication_Skills': ['Moderate', 'High', 'Low', 'Very High', 'High', 'Moderate', 'Very High', 'High', 'High', 'Low'],
+    'Soft_Skills': ['High', 'Very High', 'Moderate', 'High', 'Moderate', 'Low', 'Very High', 'Moderate', 'High', 'Low'],
+    'Interview_Score': [85, 92, 60, 88, 78, 70, 95, 75, 82, 58],
+    'Hired': ['Yes', 'Yes', 'No', 'Yes', 'No', 'No', 'Yes', 'No', 'Yes', 'No']
+}
+
+df = pd.DataFrame(data)
+
+# Convert categorical columns to one-hot encoding
+df_encoded = pd.get_dummies(df.drop(['Applicant_ID', 'Interview_Score'], axis=1))
+
+# Apply Apriori algorithm
+frequent_itemsets = apriori(df_encoded, min_support=0.2, use_colnames=True)
+
+# Generate association rules
+rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.7)
+
+# Display the frequent itemsets and rules
+print("Frequent Itemsets:")
+print(frequent_itemsets)
+
+print("\nAssociation Rules:")
+print(rules)
